@@ -639,6 +639,9 @@
 </template>
 
 <script setup>
+if (typeof qz !== 'undefined' && !qz.websocket.isActive()) {
+         qz.websocket.connect().catch(err => console.error("QZ Early Connect Error:", err));
+     }
 import { usePOSSettingsStore } from "@/stores/posSettings"
 import { formatCurrency as formatCurrencyUtil, getCurrencySymbol } from "@/utils/currency"
 import { getPaymentIcon } from "@/utils/payment"
@@ -1232,21 +1235,11 @@ function completePayment() {
 
 	console.log('[PaymentDialog] Emitting payment-completed:', paymentData)
 
-    // Trigger QZ Tray Cash Drawer Kick
-if (typeof qz !== 'undefined') {
-    if (!qz.websocket.isActive()) {
-        qz.websocket.connect().then(() => {
-            var config = qz.configs.create("POS-80C (copy 1)");
-            var data = ['\x1B' + '\x70' + '\x00' + '\x05' + '\xFF'];
-            qz.print(config, data).catch(err => console.error("QZ Print Error:", err));
-        }).catch(err => console.error("QZ Connection Error:", err));
-    } else {
-        var config = qz.configs.create("POS-80C (copy 1)");
-        var data = ['\x1B' + '\x70' + '\x00' + '\x05' + '\xFF'];
-        qz.print(config, data).catch(err => console.error("QZ Print Error:", err));
-    }
-} else {
-    console.warn("QZ Tray library is not loaded on this page.");
+    // Clean, instant action execution—no asynchronous delays
+if (typeof qz !== 'undefined' && qz.websocket.isActive()) {
+    var config = qz.configs.create("Your_Thermal_Printer_Name");
+    var data = ['\x1B' + '\x70' + '\x00' + '\x05' + '\xFF'];
+    qz.print(config, data).catch(err => console.error("QZ Print Error:", err));
 }
 	
 	emit("payment-completed", paymentData)
