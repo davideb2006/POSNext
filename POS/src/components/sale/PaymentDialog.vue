@@ -1237,7 +1237,7 @@ function completePayment() {
 
     // Clean, instant action execution—no asynchronous delays
 if (typeof qz !== 'undefined' && qz.websocket.isActive()) {
-    var config = qz.configs.create("Your_Thermal_Printer_Name");
+    var config = qz.configs.create("POS-80C (copy 1)");
     var data = ['\x1B' + '\x70' + '\x00' + '\x05' + '\xFF'];
     qz.print(config, data).catch(err => console.error("QZ Print Error:", err));
 }
