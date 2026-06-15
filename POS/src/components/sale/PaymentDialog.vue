@@ -1232,6 +1232,23 @@ function completePayment() {
 
 	console.log('[PaymentDialog] Emitting payment-completed:', paymentData)
 
+    // Trigger QZ Tray Cash Drawer Kick
+if (typeof qz !== 'undefined') {
+    if (!qz.websocket.isActive()) {
+        qz.websocket.connect().then(() => {
+            var config = qz.configs.create("Your_Thermal_Printer_Name");
+            var data = ['\x1B' + '\x70' + '\x00' + '\x05' + '\xFF'];
+            qz.print(config, data).catch(err => console.error("QZ Print Error:", err));
+        }).catch(err => console.error("QZ Connection Error:", err));
+    } else {
+        var config = qz.configs.create("Your_Thermal_Printer_Name");
+        var data = ['\x1B' + '\x70' + '\x00' + '\x05' + '\xFF'];
+        qz.print(config, data).catch(err => console.error("QZ Print Error:", err));
+    }
+} else {
+    console.warn("QZ Tray library is not loaded on this page.");
+}
+	
 	emit("payment-completed", paymentData)
 
 	show.value = false
