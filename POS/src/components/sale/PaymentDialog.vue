@@ -1236,12 +1236,12 @@ function completePayment() {
 if (typeof qz !== 'undefined') {
     if (!qz.websocket.isActive()) {
         qz.websocket.connect().then(() => {
-            var config = qz.configs.create("Your_Thermal_Printer_Name");
+            var config = qz.configs.create("POS-80C (copy 1)");
             var data = ['\x1B' + '\x70' + '\x00' + '\x05' + '\xFF'];
             qz.print(config, data).catch(err => console.error("QZ Print Error:", err));
         }).catch(err => console.error("QZ Connection Error:", err));
     } else {
-        var config = qz.configs.create("Your_Thermal_Printer_Name");
+        var config = qz.configs.create("POS-80C (copy 1)");
         var data = ['\x1B' + '\x70' + '\x00' + '\x05' + '\xFF'];
         qz.print(config, data).catch(err => console.error("QZ Print Error:", err));
     }
