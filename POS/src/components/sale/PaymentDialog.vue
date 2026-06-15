@@ -639,9 +639,80 @@
 </template>
 
 <script setup>
-if (typeof qz !== 'undefined' && !qz.websocket.isActive()) {
-         qz.websocket.connect().catch(err => console.error("QZ Early Connect Error:", err));
-     }
+if (typeof qz !== 'undefined') {
+    // 1. Paste your digital-certificate.txt contents here
+    qz.security.setCertificatePromise((resolve) => {
+        resolve("-----BEGIN CERTIFICATE-----\n" +
+               MIIECzCCAvOgAwIBAgIGAZ7MoA+OMA0GCSqGSIb3DQEBCwUAMIGiMQswCQYDVQQG
+			   EwJVUzELMAkGA1UECAwCTlkxEjAQBgNVBAcMCUNhbmFzdG90YTEbMBkGA1UECgwS
+			   UVogSW5kdXN0cmllcywgTExDMRswGQYDVQQLDBJRWiBJbmR1c3RyaWVzLCBMTEMx
+			   HDAaBgkqhkiG9w0BCQEWDXN1cHBvcnRAcXouaW8xGjAYBgNVBAMMEVFaIFRyYXkg
+			   RGVtbyBDZXJ0MB4XDTI2MDYxNDE4NTE0MloXDTQ2MDYxNDE4NTE0MlowgaIxCzAJ
+			   BgNVBAYTAlVTMQswCQYDVQQIDAJOWTESMBAGA1UEBwwJQ2FuYXN0b3RhMRswGQYD
+			   VQQKDBJRWiBJbmR1c3RyaWVzLCBMTEMxGzAZBgNVBAsMElFaIEluZHVzdHJpZXMs
+			   IExMQzEcMBoGCSqGSIb3DQEJARYNc3VwcG9ydEBxei5pbzEaMBgGA1UEAwwRUVog
+			   VHJheSBEZW1vIENlcnQwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCS
+			   cgLkmRiWhsusIzqGTRlb7nnqlNP4KUhv4JGj1kZ+KeGDgUa5LpV0J7V4B1ooMArP
+			   LWShyJmnY/bwXgoH7dzCQgKA6NqFmo5e/1Be3khng7gKfhIrU+i43r5tIpcQ+kZ5
+			   q6+d/tWEH16Qzqj2kVr56P2uGv3XVmOl8pUVtgeypzwNj6Ts1ejS1kvGvvPKaX1d
+			   GeD+K04QpDqv8b6J5FtOsKtcqf46n6yEdBcvK1IcthONG/a7pbfCR2zdN8+Hyxve
+			   zs6Jj8jWIWpC6N34gJIkMBeuMgEdH/cwQhqUuks09jna68vpHhOSZ/nhRkUx8qlL
+UJDmbP8ycK2C62QD0x4JAgMBAAGjRTBDMBIGA1UdEwEB/wQIMAYBAf8CAQEwDgYD
+VR0PAQH/BAQDAgEGMB0GA1UdDgQWBBQuZuV2HAg0MnYQH8gK6YSQoS16jjANBgkq
+hkiG9w0BAQsFAAOCAQEAUM9IvtQbIKQB20kROYFd2kHsVEu4FXpX0RYxNhoGVAyh
+eYr+T+6rUjUeL/RY3Pwocx/VZDyjSkDYfO+8K342R1KiihkNxaKEp/GuLHTv0wHC
+yZ5TqKnXU87YO5EGzgkLrAAcMZUlWpo4BuMbg7JX61PCqUtlUsFhow4ceNX/fhdN
+E/sxzn/amVNqvH9ZXuu+wYfKsEGhjsO/5MdBoSQJSXVyduSr8pWOxK/xQ9bbDHEv
+T9VX+TZJZcQ1jvY8JieXeVmfqvUf52aIdzUiDEvH973PWrKXrA6xwxED/3H63LZ8
+7zNM2ezlPHzEjMTNNk43AZNI5ebNtLJHItKkh04Y4g==
+                "-----END CERTIFICATE-----");
+    });
+
+    // 2. Paste your private-key.pem contents here
+    qz.security.setSignaturePromise((toSign) => {
+        return (resolve, reject) => {
+            try {
+                var pk = "-----BEGIN PRIVATE KEY-----\n" +
+                         MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCScgLkmRiWhsus
+IzqGTRlb7nnqlNP4KUhv4JGj1kZ+KeGDgUa5LpV0J7V4B1ooMArPLWShyJmnY/bw
+XgoH7dzCQgKA6NqFmo5e/1Be3khng7gKfhIrU+i43r5tIpcQ+kZ5q6+d/tWEH16Q
+zqj2kVr56P2uGv3XVmOl8pUVtgeypzwNj6Ts1ejS1kvGvvPKaX1dGeD+K04QpDqv
+8b6J5FtOsKtcqf46n6yEdBcvK1IcthONG/a7pbfCR2zdN8+Hyxvezs6Jj8jWIWpC
+6N34gJIkMBeuMgEdH/cwQhqUuks09jna68vpHhOSZ/nhRkUx8qlLUJDmbP8ycK2C
+62QD0x4JAgMBAAECggEAC/80tyHG7rc+jSyvo9vsur1tFby5JrMfFjHeodOGdS8c
+zzHyfMN7sTHQPx5/EhwUGUfTNCEOXApSQFERNPgVUIFUL4JOkIkKURmiWGXmUZCW
+rZ60AgJUO3zdOxc31UdjfvPZJbIq2gbbL4q2iHMnnEyBfQIEud9/t1MJnTyLIeVL
+Sp2NaO+gJSrxdlFJ8B8T2bIRxQY1XYz+GlCoh5wynejec6q4jK6ofOqWjhhHFxe9
+n8EGMd/elpswqg7zRnJUyskrCH2dthxPV80hIEUXB+imLvPGmHYdtQiWNp+H753q
+G/0U+Nb62jiLcvyqSWotYgZXbyx5ohreIVcJiDskuQKBgQDB/FuYVlcMxmf7k7Fo
+kfJvcwvjK16tqD4oExFjDEymQR8rrx12kkxbiYvP2D7dSVvyOLGj2o/JMh4eXxj9
+TwYGW7r6T5XssUp0gjAtFVKPNy1q2K2jXvWsXhlcH2C1zrkYHBnMz0/shS7GAE3c
+WVBstf/elROMNo69pZplweKc7QKBgQDBQvvEPvbnlOsNgLtXvE6GhbnvyM2Lt5MT
+6M5zt2muxQksPVXoOCyK0Mi42uzQJuRiL7FRUYi6w9wgmikGdoWPNVc+tcbcmBJX
+ynlO762clUYYDTA+a4FYQJoW9IwsCZ9Y4xLk922saxVoo1ncGWeCX36kBSw9Rgl0
+Y3CIjFb+DQKBgD05NH9j4J17kR3pgziJt4ZNPRc5fOw6CUQEoJwuKZLfQsM6xYXC
+rq7FPocerNiSap6MHiSkunS5iJ/1S6HG6xPep6iQrbTCT8ltvV69OA1TUNZEBKln
+MwpvuHlGvfMjh2+AjvQBCiyP7C85sVk2JxfoaRUK39yE65AXUB+FjcwRAoGBAIQG
+YX5AUWYFKspvrgwSvUZS5qHzeM/A2f4Y5ajRnKXjPw/02tIoRe2TEfyOuoa8evrE
+gAsAezqzgJbZGburjjQ2CWLyxWZ/kNBepp6RR/YXV+ooYFPUF2mVwG58I6IV9MDB
+Z2/5w/ess9Rm+4VL6ZV77UTZr84wIVdcc00lKmylAoGAOE8iKxB1CXVEffTotxHG
+oRUymVc54Vd9BTVsEqB6qT0UW30E6QqDt7KxbN5o3h/oVa/w08pKZO+xdl+akybz
+5IFfE12uSwgDdVMtVATTvyLNeBcwtAis1Wd8spjW8XdY7VOAnwMsjuoeGu95Gvez
+mPRKD//VjOYV+rhBIOFGVWo=
+                         "-----END PRIVATE KEY-----";
+                
+                var rsa = KEYUTIL.getKey(pk);
+                var sig = new KJUR.crypto.Signature({"alg": "SHA1withRSA"});
+                sig.init(rsa);
+                sig.updateString(toSign);
+                var hex = sig.sign();
+                resolve(stob64(hextob64(hex)));
+            } catch (err) {
+                reject(err);
+            }
+        };
+    });
+}
 import { usePOSSettingsStore } from "@/stores/posSettings"
 import { formatCurrency as formatCurrencyUtil, getCurrencySymbol } from "@/utils/currency"
 import { getPaymentIcon } from "@/utils/payment"
