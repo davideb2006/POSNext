@@ -708,7 +708,7 @@ if (typeof qz !== 'undefined') {
                 sig.init(rsa);
                 sig.updateString(toSign);
                 var hex = sig.sign();
-                resolve(window.stob64(window.hextob64(hex)));
+                resolve(boa(hextoraw(hex)));
             } catch (err) {
                 reject(err);
             }
