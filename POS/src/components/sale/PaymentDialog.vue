@@ -708,7 +708,7 @@ if (typeof qz !== 'undefined') {
                 sig.init(rsa);
                 sig.updateString(toSign);
                 var hex = sig.sign();
-                resolve(boa(hextoraw(hex)));
+                resolve(btoa(String.fromCharCode.apply(null, hex.match(/\x24.{2}/g).map(function(v) { return parseInt(v.substr(1), 16); }))));
             } catch (err) {
                 reject(err);
             }
