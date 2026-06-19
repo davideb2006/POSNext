@@ -1332,6 +1332,8 @@ if (typeof qz !== 'undefined' && qz.websocket.isActive()) {
     qz.print(config, data).catch(err => console.error("QZ Print Error:", err));
 }
 
+}
+	
 function formatCurrency(amount) {
 	return formatCurrencyUtil(Number.parseFloat(amount || 0), props.currency)
 }
