@@ -639,7 +639,7 @@
 </template>
 
 <script setup>
-/* global qz, KEYUTIL, KJUR, stob64, hextob64 */
+/* global qz, KEYUTIL, KJUR */
 
 if (typeof qz !== 'undefined') {
     // 1. Authenticate Certificate
@@ -670,7 +670,7 @@ if (typeof qz !== 'undefined') {
                 "-----END CERTIFICATE-----");
     });
 
-    // 2. Automate Silent Printing Signatures via Private Key
+    // 2. Automate Silent Signatures via Private Key
     qz.security.setSignaturePromise((toSign) => {
         return (resolve, reject) => {
             try {
@@ -708,8 +708,16 @@ if (typeof qz !== 'undefined') {
                 sig.init(rsa);
                 sig.updateString(toSign);
                 var hex = sig.sign();
-                resolve(btoa(String.fromCharCode.apply(null, hex.match(/\x24.{2}/g).map(function(v) { return parseInt(v.substr(1), 16); }))));
+                
+                // Cleanest standard base64 decoding handshake
+                var binary = "";
+                var bytes = hex.match(/.{1,2}/g);
+                for (var i = 0; i < bytes.length; i++) {
+                    binary += String.fromCharCode(parseInt(bytes[i], 16));
+                }
+                resolve(window.btoa(binary));
             } catch (err) {
+                console.error("Signature generation crashed:", err);
                 reject(err);
             }
         };
