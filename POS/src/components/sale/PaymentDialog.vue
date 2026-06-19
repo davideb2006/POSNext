@@ -638,7 +638,7 @@
 	</Dialog>
 </template>
 
-
+<script setup>
 	
 import { usePOSSettingsStore } from "@/stores/posSettings"
 import { formatCurrency as formatCurrencyUtil, getCurrencySymbol } from "@/utils/currency"
