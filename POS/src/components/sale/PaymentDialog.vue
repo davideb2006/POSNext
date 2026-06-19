@@ -1235,7 +1235,6 @@ console.log('[PaymentDialog] Emitting payment-completed:', paymentData)
 
 emit("payment-completed", paymentData)
 show.value = false
-}
 	
 function formatCurrency(amount) {
 	return formatCurrencyUtil(Number.parseFloat(amount || 0), props.currency)
