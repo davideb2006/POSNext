@@ -639,6 +639,8 @@
 </template>
 
 <script setup>
+import { onMounted, onUnmounted } from 'vue'
+
 /* global qz, KEYUTIL, KJUR */
 
 if (typeof qz !== 'undefined') {
@@ -709,7 +711,6 @@ if (typeof qz !== 'undefined') {
                 sig.updateString(toSign);
                 var hex = sig.sign();
                 
-                // Cleanest standard base64 decoding handshake
                 var binary = "";
                 var bytes = hex.match(/.{1,2}/g);
                 for (var i = 0; i < bytes.length; i++) {
@@ -721,13 +722,28 @@ if (typeof qz !== 'undefined') {
                 reject(err);
             }
         };
-    });
+    }); // <-- Fixed missing signature closing paren/bracket
+} // <-- Fixed missing main if-statement closing bracket
 
-    // 3. Early Connection Handshake
-    if (!qz.websocket.isActive()) {
-        qz.websocket.connect().catch(err => console.error("QZ Early Connect Error:", err));
+// Connect early when the dialog opens
+onMounted(() => {
+    if (typeof qz !== 'undefined' && !qz.websocket.isActive()) {
+        qz.websocket.connect().catch(err => console.error("QZ Connect Error:", err));
     }
-}
+})
+
+// Kick the drawer safely only AFTER the dialog closes completely
+onUnmounted(() => {
+    if (typeof qz !== 'undefined' && qz.websocket.isActive()) {
+        try {
+            var config = qz.configs.create("POS-80C (copy 1)");
+            var data = ['\x1B' + '\x70' + '\x00' + '\x05' + '\xFF'];
+            qz.print(config, data).catch(err => console.error("QZ Print Error:", err));
+        } catch (err) {
+            console.error("Drawer execution failed:", err);
+        }
+    }
+})
 	
 import { usePOSSettingsStore } from "@/stores/posSettings"
 import { formatCurrency as formatCurrencyUtil, getCurrencySymbol } from "@/utils/currency"
@@ -1324,14 +1340,6 @@ console.log('[PaymentDialog] Emitting payment-completed:', paymentData)
 
 emit("payment-completed", paymentData)
 show.value = false
-
-// 2. Kick the physical drawer open immediately afterward
-if (typeof qz !== 'undefined' && qz.websocket.isActive()) {
-    var config = qz.configs.create("POS-80C (copy 1)");
-    var data = ['\x1B' + '\x70' + '\x00' + '\x05' + '\xFF'];
-    qz.print(config, data).catch(err => console.error("QZ Print Error:", err));
-}
-
 }
 	
 function formatCurrency(amount) {
