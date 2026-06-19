@@ -1320,18 +1320,16 @@ function completePayment() {
 		sales_team: selectedSalesPersons.value.length > 0 ? selectedSalesPersons.value : null,
 	}
 
-	console.log('[PaymentDialog] Emitting payment-completed:', paymentData)
+console.log('[PaymentDialog] Emitting payment-completed:', paymentData)
 
-    // Clean, instant action execution—no asynchronous delays
+emit("payment-completed", paymentData)
+show.value = false
+
+// 2. Kick the physical drawer open immediately afterward
 if (typeof qz !== 'undefined' && qz.websocket.isActive()) {
     var config = qz.configs.create("POS-80C (copy 1)");
     var data = ['\x1B' + '\x70' + '\x00' + '\x05' + '\xFF'];
     qz.print(config, data).catch(err => console.error("QZ Print Error:", err));
-}
-	
-	emit("payment-completed", paymentData)
-
-	show.value = false
 }
 
 function formatCurrency(amount) {
