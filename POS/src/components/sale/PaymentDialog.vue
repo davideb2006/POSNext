@@ -638,8 +638,7 @@
 	</Dialog>
 </template>
 
-<script setup>
-	
+<script setup>	
 import { usePOSSettingsStore } from "@/stores/posSettings"
 import { formatCurrency as formatCurrencyUtil, getCurrencySymbol } from "@/utils/currency"
 import { getPaymentIcon } from "@/utils/payment"
@@ -1231,10 +1230,12 @@ function completePayment() {
 		sales_team: selectedSalesPersons.value.length > 0 ? selectedSalesPersons.value : null,
 	}
 
-console.log('[PaymentDialog] Emitting payment-completed:', paymentData)
+	console.log('[PaymentDialog] Emitting payment-completed:', paymentData)
 
-emit("payment-completed", paymentData)
-show.value = false
+	emit("payment-completed", paymentData)
+
+	show.value = false
+}
 	
 function formatCurrency(amount) {
 	return formatCurrencyUtil(Number.parseFloat(amount || 0), props.currency)
