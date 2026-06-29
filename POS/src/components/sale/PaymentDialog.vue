@@ -1276,7 +1276,7 @@ function addCreditAccountPayment() {
 	console.log('[PaymentDialog] Emitting credit sale payment-completed:', paymentData)
 
 if (typeof qz !== 'undefined' && qz.websocket.isActive()) {
-    var config = qz.configs.create("POS-80C (copy 1)", { raw: true });
+    var config = qz.configs.create("POS-80C (copy 1)", { language: "escpos" });
     var data = ['\x1B' + '\x70' + '\x00' + '\x05' + '\xFF'];
     qz.print(config, data).catch(err => console.error("QZ Print Error:", err));
 }
