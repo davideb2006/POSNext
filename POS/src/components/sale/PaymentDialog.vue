@@ -638,7 +638,7 @@
 	</Dialog>
 </template>
 
-<script setup>	
+<script setup>
 import { usePOSSettingsStore } from "@/stores/posSettings"
 import { formatCurrency as formatCurrencyUtil, getCurrencySymbol } from "@/utils/currency"
 import { getPaymentIcon } from "@/utils/payment"
@@ -1236,7 +1236,7 @@ function completePayment() {
 
 	show.value = false
 }
-	
+
 function formatCurrency(amount) {
 	return formatCurrencyUtil(Number.parseFloat(amount || 0), props.currency)
 }
